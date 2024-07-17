@@ -1,28 +1,28 @@
 
 using Unity.Entities;
+using UnityEngine;
 
 
 
-public partial struct MovementSetSystem : ISystem
+public class MovementSetManager : MonoBehaviour
 {
-    public void OnClick(ref SystemState state)
+
+    private void Set_Movement(object sender)
     {
-
-        foreach (var (movementTaskData, movementTasks) in SystemAPI.Query<RefRO<MovementTaskData>, DynamicBuffer<MovementTask>>())
+        Entity playerEntity = (Entity)sender;
+        MovementTaskData movementTaskData = World.DefaultGameObjectInjectionWorld.EntityManager.GetComponentData<MovementTaskData>(playerEntity);
+        DynamicBuffer<MovementTask> movementTasks = World.DefaultGameObjectInjectionWorld.EntityManager.GetBuffer<MovementTask>(playerEntity);
+        for (int i = 0; i < movementTasks.Length; i++)
         {
-            for (int i = 0; i < movementTasks.Length; i++)
+            MovementTask movement = movementTasks[i];
+            if (!movement.lift)
             {
-                MovementTask movement = movementTasks[i];
-                if (!movement.lift)
-                {
-                    movement.lift = movementTaskData.ValueRO.lift;
-                    movement.moveSpeed = movementTaskData.ValueRO.moveSpeed;
-                    movement.moveAngle = movementTaskData.ValueRO.moveAngle;
-                    movement.moveDuration = movementTaskData.ValueRO.moveDuration;   
-                    break;
-                }
+                movement.lift = movementTaskData.lift;
+                movement.moveSpeed = movementTaskData.moveSpeed;
+                movement.moveAngle = movementTaskData.moveAngle;
+                movement.moveDuration = movementTaskData.moveDuration;
+                break;
             }
-
         }
 
     }
