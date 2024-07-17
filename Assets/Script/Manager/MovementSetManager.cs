@@ -7,7 +7,13 @@ using UnityEngine;
 public class MovementSetManager : MonoBehaviour
 {
 
-    private void Set_Movement(object sender)
+    private void Start()
+    {
+      MoveSystem moveSystem = World.DefaultGameObjectInjectionWorld.GetExistingSystemManaged<MoveSystem>();
+      moveSystem.OnMove += Set_Movement;
+
+    }
+    private void Set_Movement(object sender,System.EventArgs e)
     {
         Entity playerEntity = (Entity)sender;
         MovementTaskData movementTaskData = World.DefaultGameObjectInjectionWorld.EntityManager.GetComponentData<MovementTaskData>(playerEntity);
