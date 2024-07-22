@@ -1,25 +1,24 @@
-
-using System;
 using Unity.Entities;
-using UnityEngine.EventSystems;
+using Unity.Transforms;
 
 public partial class MoveSystem : SystemBase
 {
-    public event EventHandler OnMove;
 
     protected override void OnUpdate()
     {
-        foreach ((RefRO<Controller> Controller, RefRW<MovementTaskData> movementTaskData, Entity entity) in SystemAPI.Query<RefRO<Controller>, RefRW<MovementTaskData>>().WithEntityAccess())
-        {
-            if (Controller.ValueRO.inputSignal.HasFlag(InputSignal.Up))
-            {
-                movementTaskData.ValueRW.lift = true;
-                movementTaskData.ValueRW.moveSpeed = 1;
-                movementTaskData.ValueRW.moveAngle = 90;
-                movementTaskData.ValueRW.moveDuration = 1;
-                OnMove?.Invoke(entity, EventArgs.Empty);
-            }
 
+        foreach ((RefRW<TransformData> transform, RefRO<MoveData> moveData) in SystemAPI.Query<RefRW<TransformData>, RefRO<MoveData>>())
+        {
+
+            if (moveData.ValueRO.direction.HasFlag(Direction.Forward))
+            {
+                transform.ValueRW.position.x += moveData.ValueRO.moveSpeed* SystemAPI.Time.DeltaTime;
+         
+            }
+            if (moveData.ValueRO.direction.HasFlag(Direction.Backward))
+            {
+                transform.ValueRW.position.x -= moveData.ValueRO.moveSpeed * SystemAPI.Time.DeltaTime;
+            }
         }
     }
 }

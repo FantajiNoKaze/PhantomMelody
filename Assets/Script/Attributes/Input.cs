@@ -8,7 +8,7 @@ public enum InputSignal
     None = 0,
     Up = 1,
     Dowm = 2,
-    Lift = 4,
+    Left = 4,
     Right = 8
 }
 
