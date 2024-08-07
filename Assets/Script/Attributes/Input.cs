@@ -2,19 +2,28 @@
 
 using System;
 using Unity.Entities;
-[Flags]
-public enum InputSignal
-{
-    None = 0,
-    Up = 1,
-    Dowm = 2,
-    Left = 4,
-    Right = 8
-}
-
 
 public struct Controller : IComponentData
 {
     public InputSignal inputSignal;
 
+}
+
+public enum LogState
+{
+    none,
+    accept,
+    predict
+}
+public class Log
+{
+    public InputSignal InputLog;
+    public int TimeLog;
+    public LogState StateLog;
+    public Log()
+    {
+        InputLog = InputSignal.None;
+        TimeLog = 0;
+        StateLog = LogState.none;
+    }
 }
