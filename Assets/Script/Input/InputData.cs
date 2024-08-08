@@ -33,5 +33,4 @@ public class InputData : IInputData
         _InputSignal = InputSignal;
     }
 
-
 }

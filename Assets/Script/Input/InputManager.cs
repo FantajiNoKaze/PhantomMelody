@@ -1,36 +1,26 @@
 
 using UnityEngine;
-using Zenject;
+using VContainer.Unity;
 
-public class InputManager : MonoBehaviour
+public class InputManager : ITickable, IFixedTickable
 {
-    private readonly IInputData _InputData;
+    private readonly IInputService _InputController;
     private InputSignal _Input;
-
-    [Inject]
-    public InputManager(IInputData InputData)
+    public InputManager(IInputService InputController)
     {
-        _InputData = InputData;
+        _InputController = InputController;
     }
-    void Start()
+    void ITickable.Tick()
     {
-        Debug.Log("ssss");
-    }
-    void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.UpArrow))
+        if (Input.GetKey(KeyCode.W))
         {
-            _Input &= InputSignal.GetKeyDown_Up;
-        }
-        if (Input.GetKeyUp(KeyCode.UpArrow))
-        {
-            _Input &= InputSignal.GetKeyUp_Up;
-        }
+            _Input = InputSignal.GetKeyDown_Up;
+        }       
     }
-
-    void FixedUpdate()
+    void IFixedTickable.FixedTick()
     {
-        _InputData.Write(_Input);
+        _InputController.Write(_Input);
         _Input = InputSignal.None;
     }
 }
+
