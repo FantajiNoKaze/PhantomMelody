@@ -15,6 +15,14 @@ public class GameLifetimeScope : LifetimeScope
         builder.RegisterEntryPoint<GGPOManager>();
         builder.Register<IGGPOData,GGPOData>(Lifetime.Singleton);
         builder.Register<IGGPOService,GGPOService>(Lifetime.Singleton);
-       
+
+        builder.RegisterEntryPoint<SocketManager>();
+        builder.Register<ISocketData,SocketData>(Lifetime.Singleton);
+        builder.Register<INetSocket,NetSocket>(Lifetime.Singleton);
+        builder.Register<ISocketService,SocketService>(Lifetime.Singleton);
+
+        builder.RegisterEntryPoint<NetTestManager>();
+         builder.Register<NetTestData>(Lifetime.Singleton);
+        
     }
 }
