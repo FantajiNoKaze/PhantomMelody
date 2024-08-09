@@ -6,6 +6,8 @@ public class GameLifetimeScope : LifetimeScope
 {
     protected override void Configure(IContainerBuilder builder)
     {
+
+
         builder.Register<IWorldData, WorldData>(Lifetime.Singleton);
         builder.RegisterEntryPoint<PlayerManager>();
         builder.Register<IPlayerData, PlayerData>(Lifetime.Singleton);
@@ -29,6 +31,7 @@ public class GameLifetimeScope : LifetimeScope
         builder.Register<INetSocket, NetSocket>(Lifetime.Singleton);
         builder.Register<ISocketService, SocketService>(Lifetime.Singleton);
 
+        builder.RegisterEntryPoint<GameMain>();
 
     }
 

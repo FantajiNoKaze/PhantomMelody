@@ -1,7 +1,7 @@
 
 using VContainer.Unity;
 
-public class PlayerManager : IStartable, IFixedTickable
+public class PlayerManager : IRunner
 {
     private readonly IPlayerData _PlayerData;
     private readonly IWorldData _WorldData;
@@ -11,7 +11,8 @@ public class PlayerManager : IStartable, IFixedTickable
         _PlayerData = PlayerData;
         _WorldData = WorldData;
     }
-    void IStartable.Start()
+
+    public void Init()
     {
         _PlayerData.AddPlayer();
         _PlayerData.AddPlayer();
@@ -21,10 +22,9 @@ public class PlayerManager : IStartable, IFixedTickable
         }
         _WorldData.InitPlayerGroup(_PlayerData.GetPlayerGroup());
     }
-    void IFixedTickable.FixedTick()
+
+    public void Runner()
     {
 
     }
-
-
 }

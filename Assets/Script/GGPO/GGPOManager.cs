@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using VContainer.Unity;
 
-public class GGPOManager : IStartable, IFixedTickable
+public class GGPOManager : IRunner
 {
     private readonly IGGPOService _GGPOService;
     private readonly IInputService _InputService;
@@ -17,26 +17,13 @@ public class GGPOManager : IStartable, IFixedTickable
         _WorldData = WorldData;
         _InputService = InputService;
 
-    }
-    void IStartable.Start()
-    {
-        foreach (var p in _WorldData.GetPlayerGroup())
-        {
-            UnityEngine.Debug.Log("Creat GGPO : " + p);
-        }
-        _GGPOService.InitGGPO(_WorldData.GetPlayerGroup());
-    }
-    void IFixedTickable.FixedTick()
-    {
-        LocalPlayerPostGGPO();
-        OutlandPlayerPostGGPO();
-        TimeFrame++;
+
     }
     void LocalPlayerPostGGPO()
     {
         _Log.InputLog = _InputService.Read();
         _Log.TimeLog = TimeFrame;
-        _Log.StateLog = LogState.accept;
+        _Log.StateLog = Log.State.accept;
         _GGPOService.Post(1, TimeFrame, _Log);
     }
     void OutlandPlayerPostGGPO()
@@ -44,5 +31,19 @@ public class GGPOManager : IStartable, IFixedTickable
 
     }
 
+    public void Init()
+    {
+        foreach (var p in _WorldData.GetPlayerGroup())
+        {
+            UnityEngine.Debug.Log("Creat GGPO : " + p);
+        }
+        _GGPOService.InitGGPO(_WorldData.GetPlayerGroup());
+    }
 
+    public void Runner()
+    {
+        LocalPlayerPostGGPO();
+        OutlandPlayerPostGGPO();
+        TimeFrame++;
+    }
 }

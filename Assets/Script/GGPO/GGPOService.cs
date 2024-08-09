@@ -14,7 +14,7 @@ public class GGPOService : IGGPOService
 {
 
     private readonly IGGPOData _GGPOData;
-   
+
     public GGPOService(IGGPOData GGPOData)
     {
         _GGPOData = GGPOData;
@@ -35,7 +35,7 @@ public class GGPOService : IGGPOService
         {
             checking = true;
         };
-        Log.StateLog = LogState.accept;
+        Log.StateLog = Log.State.accept;
         _GGPOData.Write_Log(PlayerID, TimeFrame, Log);
         return (checking, TimeFrame);
     }
@@ -48,9 +48,9 @@ public class GGPOService : IGGPOService
         Log log = new();
         InputSignal PredicSignal;
         int PredicTimePoint = CurrentTimrPoint;
-        while (_GGPOData.Read_Log(PlayerID, PredicTimePoint).StateLog != LogState.none || PredicTimePoint == 0)
+        while (_GGPOData.Read_Log(PlayerID, PredicTimePoint).StateLog != Log.State.none || PredicTimePoint == 0)
         {
-            if (_GGPOData.Read_Log(PlayerID, PredicTimePoint).StateLog == LogState.none)
+            if (_GGPOData.Read_Log(PlayerID, PredicTimePoint).StateLog == Log.State.none)
             {
                 PredicTimePoint -= 1;
             };
@@ -60,7 +60,7 @@ public class GGPOService : IGGPOService
         {
             log.InputLog = PredicSignal;
             log.TimeLog = PredicTimePoint;
-            log.StateLog = LogState.predict;
+            log.StateLog = Log.State.predict;
             _GGPOData.Write_Log(PlayerID, PredicTimePoint, log);
         }
     }
@@ -69,12 +69,12 @@ public class GGPOService : IGGPOService
         Log _Log = new();
         for (int i = PredicTimePoint; i <= CurrentTimrPoint; i++)
         {
-            if (_GGPOData.Read_Log(PlayerID, PredicTimePoint).StateLog == LogState.predict)
+            if (_GGPOData.Read_Log(PlayerID, PredicTimePoint).StateLog == Log.State.predict)
             {
-                _GGPOData.Write_Log(PlayerID, PredicTimePoint, ChangeLog_Time_State(_Log, _GGPOData.Read_Log(PlayerID, PredicTimePoint - 1), PredicTimePoint, LogState.predict));
+                _GGPOData.Write_Log(PlayerID, PredicTimePoint, ChangeLog_Time_State(_Log, _GGPOData.Read_Log(PlayerID, PredicTimePoint - 1), PredicTimePoint, Log.State.predict));
             }
         }
-        Log ChangeLog_Time_State(Log _Log, Log Reflog, int TimeFrame, LogState LogState)
+        Log ChangeLog_Time_State(Log _Log, Log Reflog, int TimeFrame, Log.State LogState)
         {
             _Log.InputLog = Reflog.InputLog;
             _Log.TimeLog = TimeFrame;
