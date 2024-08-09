@@ -3,13 +3,17 @@ using VContainer.Unity;
 
 public class GameManager : IRunner
 {
-    public void Init()
+    private IWorldData _WorldData;
+    public GameManager(IWorldData WorldData){
+        _WorldData =  WorldData;
+    }
+    public void RunInit()
     {
         
     }
 
     public void Runner()
     {
-        
+       _WorldData.ClockTimeFrame();
     }
 }

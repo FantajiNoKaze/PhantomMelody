@@ -1,26 +1,54 @@
 
+using Unity.Entities.UniversalDelegates;
 using UnityEngine;
 using VContainer.Unity;
 
-public class InputManager : ITickable, IFixedTickable
+public class InputManager : IRunner
 {
-    private readonly IInputService _InputController;
-    private InputSignal _Input;
-    public InputManager(IInputService InputController)
+    InputSignal _InputSignal = new();
+    Log _Log = new();
+    private IGGPOService _GGPOService;
+    private IWorldData _WorldData;
+
+    public InputManager(IGGPOService GGPOService, IWorldData WorldData)
     {
-        _InputController = InputController;
+        _GGPOService = GGPOService;
+        _WorldData = WorldData;
     }
-    void ITickable.Tick()
+
+    public void RunInit()
     {
-        if (Input.GetKey(KeyCode.W))
+
+    }
+
+    public void Runner()
+    {
+
+        if (Input.GetKey(KeyCode.UpArrow))
         {
-            _Input = InputSignal.GetKeyDown_Up;
-        }       
+            _InputSignal |= InputSignal.GetKeyDown_Up;
+        }
+        if (Input.GetKey(KeyCode.DownArrow))
+        {
+            _InputSignal |= InputSignal.GetKeyDown_Dowm;
+        }
+        if (Input.GetKey(KeyCode.LeftArrow))
+        {
+            _InputSignal |= InputSignal.GetKeyDown_Left;
+        }
+        if (Input.GetKey(KeyCode.RightArrow))
+        {
+            _InputSignal |= InputSignal.GetKeyDown_Right;
+        }
+        _Log.InputLog = _InputSignal;
+        _Log.TimeLog = _WorldData.GetTimeFrame();
+        _GGPOService.Post(_WorldData.GetLocalPlayerID(), _WorldData.GetTimeFrame(), _Log);
+
+        _InputSignal &= InputSignal.None;
+
+
     }
-    void IFixedTickable.FixedTick()
-    {
-        _InputController.Write(_Input);
-        _Input = InputSignal.None;
-    }
+
+
 }
 

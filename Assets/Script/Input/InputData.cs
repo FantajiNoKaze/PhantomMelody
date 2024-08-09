@@ -22,7 +22,7 @@ public interface IInputData
 }
 public class InputData : IInputData
 {
-    private InputSignal _InputSignal = new();
+    private InputSignal _InputSignal =0;
 
     public InputSignal Read()
     {

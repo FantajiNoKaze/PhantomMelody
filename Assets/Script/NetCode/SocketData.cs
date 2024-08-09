@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Net.Mail;
+using UnityEngine.PlayerLoop;
 public enum PacketType
 {
     SystemMessage,
@@ -42,20 +43,31 @@ public class SocketData : ISocketData
 
 public interface IMessageBuffer
 {
-    Queue<Log> ReadGGPOBuffer(int PlayerID);
+    Queue<Log> GetGGPOBuffer(int PlayerID);
     void WriteGGPOMessage(int PlayerID, Log Log);
+    void Init(List<int> PlayerGroup);
 
 }
-public class SystemMessage
+public struct SystemLog
 {
 
 }
 public class MessageBuffer : IMessageBuffer
 {
-    readonly Dictionary<int, Queue<SystemMessage>> ToBeExecute_SystemMessageBuffer;
-    readonly Dictionary<int, Queue<Log>> ToBeExecute_GGPOMessageBuffer;
+    readonly Dictionary<int, Queue<SystemLog>> ToBeExecute_SystemMessageBuffer = new();
+    readonly Dictionary<int, Queue<Log>> ToBeExecute_GGPOMessageBuffer = new();
 
-    public Queue<Log> ReadGGPOBuffer(int PlayerID)
+    public void Init(List<int> PlayerGroup)
+    {
+        foreach (int Player in PlayerGroup)
+        {
+            ToBeExecute_SystemMessageBuffer.Add(Player, new Queue<SystemLog>());
+            ToBeExecute_GGPOMessageBuffer.Add(Player, new Queue<Log>());
+        }
+
+    }
+
+    public Queue<Log> GetGGPOBuffer(int PlayerID)
     {
         return ToBeExecute_GGPOMessageBuffer[PlayerID];
     }

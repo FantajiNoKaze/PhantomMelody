@@ -12,7 +12,7 @@ public class PlayerManager : IRunner
         _WorldData = WorldData;
     }
 
-    public void Init()
+    public void RunInit()
     {
         _PlayerData.AddPlayer();
         _PlayerData.AddPlayer();

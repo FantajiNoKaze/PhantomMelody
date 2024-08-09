@@ -4,38 +4,31 @@ using VContainer.Unity;
 
 public interface IRunner
 {
-    void Init();
+    void RunInit();
     void Runner();
 }
 public class GameMain : IStartable, IFixedTickable
 {
-    IRunner _GameManager;
-    IRunner _PlayerManager;
-    IRunner _SocketManager;
-    IRunner _GGPOManager;
-    List<IRunner> ManagerGroup;
-    public GameMain(IRunner GameManager, IRunner GGPOManager, IRunner PlayerManager, IRunner SocketManager)
+
+    List<IRunner> _ManagerGroup = new();
+    public GameMain(GameManager GameManager, PlayerManager PlayerManager, InputManager InputManager, GGPOManager GGPOManage, SocketManager SocketManager)
     {
-        _GameManager = GameManager;
-        _PlayerManager = PlayerManager;
-        _SocketManager = SocketManager;
-        _GGPOManager = GGPOManager;
+        _ManagerGroup.Add(PlayerManager);
+        _ManagerGroup.Add(InputManager);
+        _ManagerGroup.Add(GGPOManage);
+        _ManagerGroup.Add(SocketManager);
+        _ManagerGroup.Add(GameManager);
     }
     public void Start()
     {
-        ManagerGroup.Add(_GameManager);
-        ManagerGroup.Add(_PlayerManager);
-       // ManagerGroup.Add(_GGPOManager);
-      //  ManagerGroup.Add(_SocketManager);
-       
-        foreach (var Manager in ManagerGroup)
+        foreach (var Manager in _ManagerGroup)
         {
-            Manager.Init();
+            Manager.RunInit();
         }
     }
     public void FixedTick()
     {
-        foreach (var Manager in ManagerGroup)
+        foreach (var Manager in _ManagerGroup)
         {
             Manager.Runner();
         }
