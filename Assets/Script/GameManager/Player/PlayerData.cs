@@ -9,7 +9,7 @@ public class Player
 public interface IPlayerData
 {
     void AddPlayer();
-    List<int> GetAllPlayerID();
+    List<int> GetPlayerGroup();
 }
 public class PlayerData : IPlayerData
 {
@@ -19,14 +19,14 @@ public class PlayerData : IPlayerData
     {
         _Players.Add(PlayerID += 1, new Player());
     }
-    public List<int> GetAllPlayerID()//看到幫我修(功能:返回所有key)
+    public List<int> GetPlayerGroup()//看到幫我修(功能:返回所有key)
     {
-        List<int> _AllPlayerID = new();
+        List<int> _PlayerGroup = new();
         foreach (KeyValuePair<int, Player> kvp in _Players)
         {
-            _AllPlayerID.Add(kvp.Key);
+            _PlayerGroup.Add(kvp.Key);
         }
-        return _AllPlayerID;
+        return _PlayerGroup;
     }
 
 }

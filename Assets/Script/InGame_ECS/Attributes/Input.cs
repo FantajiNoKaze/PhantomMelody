@@ -15,15 +15,11 @@ public enum LogState
     accept,
     predict
 }
-public class Log
+
+public struct  Log
 {
     public InputSignal InputLog;
     public int TimeLog;
     public LogState StateLog;
-    public Log()
-    {
-        InputLog = InputSignal.None;
-        TimeLog = 0;
-        StateLog = LogState.none;
-    }
+    
 }

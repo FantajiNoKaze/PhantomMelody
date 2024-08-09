@@ -1,3 +1,4 @@
+using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.Rendering.VirtualTexturing;
 
@@ -5,15 +6,31 @@ public interface ISocketService
 {
     void SendPacket<T>(int ToPlayerID, PacketType PacketType, T Message);
     void Broadcast(PacketType PacketType, string Message);
+    void ReceivePacket(int FormPlayerID, Packet Packet);
 }
 public class SocketService : ISocketService
 {
     private readonly ISocketData _SocketData;
     private readonly IPlayerData _PlayerData;
-    public SocketService(ISocketData SocketData, IPlayerData PlayerData)
+    private readonly IMessageBuffer _MessageBuffer;
+
+    public SocketService(ISocketData SocketData, IPlayerData PlayerData, IMessageBuffer MessageBuffer)
     {
         _SocketData = SocketData;
         _PlayerData = PlayerData;
+        _MessageBuffer = MessageBuffer;
+    }
+
+    public void ReceivePacket(int FormPlayerID, Packet Packet)
+    {
+        if (Packet.PacketType == PacketType.SystemMessage)
+        {
+
+        }
+        if (Packet.PacketType == PacketType.GGPOMessage)
+        {
+            _MessageBuffer.WriteGGPOMessage(FormPlayerID, DeSerializable<Log>(Packet.Message));
+        }
     }
 
     public void SendPacket<T>(int ToPlayerID, PacketType PacketType, T Message)
@@ -25,11 +42,11 @@ public class SocketService : ISocketService
     }
     void Send(int ToPlayerID, Packet _Packet)
     {
-        
+
     }
     public void Broadcast(PacketType PacketType, string Message)
     {
-        foreach (int ToPlayer in _PlayerData.GetAllPlayerID())
+        foreach (int ToPlayer in _PlayerData.GetPlayerGroup())
         {
             if (ToPlayer != 1)
             {
@@ -41,17 +58,9 @@ public class SocketService : ISocketService
     {
         return JsonUtility.ToJson(Message);
     }
-    T DeSerializable<T>(PacketType PacketType, string Message)
+    T DeSerializable<T>(string Message)
     {
-        if (PacketType == PacketType.SystemMessage)
-        {
-            return default(T);
-        }
-        if (PacketType == PacketType.GGPOMessage)
-        {
-            return JsonUtility.FromJson<T>(Message);
-        }
-        return default(T);
+        return JsonUtility.FromJson<T>(Message); ;
     }
 
 

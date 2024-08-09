@@ -9,7 +9,7 @@ public enum PacketType
 }
 
 [Serializable]
-public class Packet
+public struct Packet
 {
     public PacketType PacketType;
     public string Message;
@@ -37,5 +37,30 @@ public class SocketData : ISocketData
     Packet DeQueueReceivePacket(int FromPlayerID)
     {
         return ReceivePacketBuffer[FromPlayerID].Dequeue();
+    }
+}
+
+public interface IMessageBuffer
+{
+    Queue<Log> ReadGGPOBuffer(int PlayerID);
+    void WriteGGPOMessage(int PlayerID, Log Log);
+
+}
+public class SystemMessage
+{
+
+}
+public class MessageBuffer : IMessageBuffer
+{
+    readonly Dictionary<int, Queue<SystemMessage>> ToBeExecute_SystemMessageBuffer;
+    readonly Dictionary<int, Queue<Log>> ToBeExecute_GGPOMessageBuffer;
+
+    public Queue<Log> ReadGGPOBuffer(int PlayerID)
+    {
+        return ToBeExecute_GGPOMessageBuffer[PlayerID];
+    }
+    public void WriteGGPOMessage(int PlayerID, Log Log)
+    {
+        ToBeExecute_GGPOMessageBuffer[PlayerID].Enqueue(Log);
     }
 }

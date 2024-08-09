@@ -21,6 +21,5 @@ public class SocketManager : IStartable, IFixedTickable
     {
         _SocketService.Broadcast(PacketType.GGPOMessage, JsonUtility.ToJson(_GGPOService.Get(1, TimeFrame)));//1 is local playerID
         TimeFrame++;
-
     }
 }

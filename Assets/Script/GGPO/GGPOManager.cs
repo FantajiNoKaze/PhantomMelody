@@ -6,25 +6,25 @@ public class GGPOManager : IStartable, IFixedTickable
 {
     private readonly IGGPOService _GGPOService;
     private readonly IInputService _InputService;
-    private readonly IPlayerData _PlayerData;
+    private readonly IWorldData _WorldData;
     //private readonly IGetOutlandPlayerData _GetOutlandPlayerData;
 
     Log _Log = new();
     public int TimeFrame = 0;
-    public GGPOManager(IGGPOService GGPOService, IPlayerData PlayerData, IInputService InputService)
+    public GGPOManager(IGGPOService GGPOService, IWorldData WorldData, IInputService InputService)
     {
         _GGPOService = GGPOService;
-        _PlayerData = PlayerData;
+        _WorldData = WorldData;
         _InputService = InputService;
 
     }
     void IStartable.Start()
     {
-        foreach (var p in _PlayerData.GetAllPlayerID())
+        foreach (var p in _WorldData.GetPlayerGroup())
         {
             UnityEngine.Debug.Log("Creat GGPO : " + p);
         }
-        _GGPOService.InitGGPO(_PlayerData.GetAllPlayerID());
+        _GGPOService.InitGGPO(_WorldData.GetPlayerGroup());
     }
     void IFixedTickable.FixedTick()
     {

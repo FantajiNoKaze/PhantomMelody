@@ -23,7 +23,7 @@ public class GGPOService : IGGPOService
     {
         foreach (int PlayerID in PlayerID_Group)
         {
-            _GGPOData.Add_List(PlayerID);
+            _GGPOData.AddPlayer(PlayerID);
         }
     }
     //void AddPlayer();
